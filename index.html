@@ -12,7 +12,7 @@
       background: white;
       margin: 20px auto;
       padding: 20px;
-      width: 320px;
+      width: 340px;
       border-radius: 12px;
       box-shadow: 0 0 10px gray;
     }
@@ -26,6 +26,13 @@
       margin: 5px;
       cursor: pointer;
     }
+    input, textarea {
+      width: 90%;
+      padding: 8px;
+      margin: 5px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
   </style>
 </head>
 
@@ -34,49 +41,59 @@
 <h1>🍔 Fast Food Corner</h1>
 
 <div class="box">
+  <h2>Customer Details</h2>
+  <input id="name" placeholder="Your Name"><br>
+  <textarea id="address" placeholder="Delivery Address"></textarea>
+</div>
+
+<div class="box">
   <h2>🍫 Chocolate — ₹1</h2>
-  <img src="https://upload.wikimedia.org/wikipedia/commons/7/70/Chocolate_%28blue_background%29.jpg" width="260"><br><br>
-  <button onclick="alert('Chocolate Order Placed ✅')">Order</button>
-  <a href="upi://pay?pa=diku.r@ptyes&pn=FoodShop&am=1">
-    <button>Pay Now</button>
-  </a>
+  <button onclick="order('Chocolate',1)">Order</button>
 </div>
 
 <div class="box">
   <h2>🍕 Pizza — ₹249</h2>
-  <img src="https://upload.wikimedia.org/wikipedia/commons/d/d3/Supreme_pizza.jpg" width="260"><br><br>
-  <button onclick="alert('Pizza Order Placed ✅')">Order</button>
-  <a href="upi://pay?pa=diku.r@ptyes&pn=FoodShop&am=249">
-    <button>Pay Now</button>
-  </a>
+  <button onclick="order('Pizza',249)">Order</button>
 </div>
 
 <div class="box">
   <h2>🍔 Burger — ₹129</h2>
-  <img src="https://upload.wikimedia.org/wikipedia/commons/4/4f/Cheeseburger.jpg" width="260"><br><br>
-  <button onclick="alert('Burger Order Placed ✅')">Order</button>
-  <a href="upi://pay?pa=diku.r@ptyes&pn=FoodShop&am=129">
-    <button>Pay Now</button>
-  </a>
+  <button onclick="order('Burger',129)">Order</button>
 </div>
 
 <div class="box">
   <h2>🍛 Biryani — ₹179</h2>
-  <img src="https://upload.wikimedia.org/wikipedia/commons/4/4b/Hyderabadi_Chicken_Biryani.jpg" width="260"><br><br>
-  <button onclick="alert('Biryani Order Placed ✅')">Order</button>
-  <a href="upi://pay?pa=diku.r@ptyes&pn=FoodShop&am=179">
-    <button>Pay Now</button>
-  </a>
+  <button onclick="order('Biryani',179)">Order</button>
 </div>
 
 <div class="box">
   <h2>🍦 Ice Cream — ₹69</h2>
-  <img src="https://upload.wikimedia.org/wikipedia/commons/3/3a/Ice_Cream_dessert_02.jpg" width="260"><br><br>
-  <button onclick="alert('Ice Cream Order Placed ✅')">Order</button>
-  <a href="upi://pay?pa=diku.r@ptyes&pn=FoodShop&am=69">
+  <button onclick="order('Ice Cream',69)">Order</button>
+</div>
+
+<div class="box">
+  <h2>Total: ₹<span id="total">0</span></h2>
+  <a id="paylink" href="#">
     <button>Pay Now</button>
   </a>
 </div>
+
+<script>
+let total = 0;
+
+function order(item, price) {
+  total += price;
+  document.getElementById("total").innerText = total;
+
+  let name = document.getElementById("name").value;
+  let address = document.getElementById("address").value;
+
+  let link = "upi://pay?pa=diku.r@ptyes&pn=" + name + "&am=" + total;
+  document.getElementById("paylink").href = link;
+
+  alert(item + " added to cart ✅");
+}
+</script>
 
 </body>
 </html>
