@@ -1,98 +1,127 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Fast Food Corner</title>
-  <style>
-    body {
-      font-family: Arial;
-      background: #fff3e0;
-      text-align: center;
-    }
-    .box {
-      background: white;
-      margin: 20px auto;
-      padding: 20px;
-      width: 340px;
-      border-radius: 12px;
-      box-shadow: 0 0 10px gray;
-    }
-    button {
-      background: #ff5722;
-      color: white;
-      border: none;
-      padding: 12px;
-      border-radius: 6px;
-      font-size: 16px;
-      margin: 5px;
-      cursor: pointer;
-    }
-    input, textarea {
-      width: 90%;
-      padding: 8px;
-      margin: 5px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-    }
-  </style>
+<title>Food Delivery</title>
+<style>
+body{
+  font-family: Arial;
+  background:#f5f5f5;
+  text-align:center;
+}
+.header{
+  background:#e23744;
+  color:white;
+  padding:15px;
+  font-size:22px;
+  font-weight:bold;
+}
+.card{
+  background:white;
+  width:330px;
+  margin:15px auto;
+  padding:15px;
+  border-radius:12px;
+  box-shadow:0 0 8px gray;
+}
+button{
+  background:#e23744;
+  color:white;
+  border:none;
+  padding:8px 14px;
+  border-radius:6px;
+  margin:5px;
+}
+.qty{
+  font-size:18px;
+  margin:0 10px;
+}
+input, textarea{
+  width:90%;
+  padding:8px;
+  margin:5px;
+  border-radius:6px;
+  border:1px solid #ccc;
+}
+</style>
 </head>
 
 <body>
 
-<h1>🍔 Fast Food Corner</h1>
+<div class="header">🍔 Food Delivery</div>
 
-<div class="box">
-  <h2>Customer Details</h2>
-  <input id="name" placeholder="Your Name"><br>
-  <textarea id="address" placeholder="Delivery Address"></textarea>
+<div class="card">
+<h3>Customer Details</h3>
+<input id="name" placeholder="Your Name">
+<textarea id="address" placeholder="Delivery Address"></textarea>
 </div>
 
-<div class="box">
-  <h2>🍫 Chocolate — ₹1</h2>
-  <button onclick="order('Chocolate',1)">Order</button>
-</div>
+<div id="items"></div>
 
-<div class="box">
-  <h2>🍕 Pizza — ₹249</h2>
-  <button onclick="order('Pizza',249)">Order</button>
-</div>
-
-<div class="box">
-  <h2>🍔 Burger — ₹129</h2>
-  <button onclick="order('Burger',129)">Order</button>
-</div>
-
-<div class="box">
-  <h2>🍛 Biryani — ₹179</h2>
-  <button onclick="order('Biryani',179)">Order</button>
-</div>
-
-<div class="box">
-  <h2>🍦 Ice Cream — ₹69</h2>
-  <button onclick="order('Ice Cream',69)">Order</button>
-</div>
-
-<div class="box">
-  <h2>Total: ₹<span id="total">0</span></h2>
-  <a id="paylink" href="#">
-    <button>Pay Now</button>
-  </a>
+<div class="card">
+<h3>Total: ₹<span id="total">0</span></h3>
+<button onclick="pay()">Pay Now</button>
+<button onclick="whatsapp()">Order on WhatsApp</button>
 </div>
 
 <script>
-let total = 0;
 
-function order(item, price) {
-  total += price;
-  document.getElementById("total").innerText = total;
+let foods = [
+  {name:"Pizza", price:249},
+  {name:"Burger", price:129},
+  {name:"Biryani", price:179},
+  {name:"Cold Drink", price:49},
+  {name:"Ice Cream", price:69}
+];
 
-  let name = document.getElementById("name").value;
-  let address = document.getElementById("address").value;
+let cart = {};
 
-  let link = "upi://pay?pa=diku.r@ptyes&pn=" + name + "&am=" + total;
-  document.getElementById("paylink").href = link;
+let html="";
 
-  alert(item + " added to cart ✅");
+foods.forEach((f,i)=>{
+  cart[i]=0;
+  html += `
+  <div class="card">
+  <h3>${f.name} — ₹${f.price}</h3>
+  <button onclick="change(${i},-1)">−</button>
+  <span class="qty" id="q${i}">0</span>
+  <button onclick="change(${i},1)">+</button>
+  </div>`;
+});
+
+document.getElementById("items").innerHTML = html;
+
+function change(i,val){
+  cart[i]+=val;
+  if(cart[i]<0) cart[i]=0;
+  document.getElementById("q"+i).innerText = cart[i];
+  updateTotal();
 }
+
+function updateTotal(){
+  let t=0;
+  foods.forEach((f,i)=>{
+    t += f.price * cart[i];
+  });
+  document.getElementById("total").innerText = t;
+}
+
+function pay(){
+  let t = document.getElementById("total").innerText;
+  let name = document.getElementById("name").value;
+
+  let link = "upi://pay?pa=diku.r@ptyes&pn="+name+"&am="+t;
+  window.location.href = link;
+}
+
+function whatsapp(){
+  let t = document.getElementById("total").innerText;
+  let name = document.getElementById("name").value;
+  let addr = document.getElementById("address").value;
+
+  let msg = "Order from "+name+"%0AAddress: "+addr+"%0ATotal: ₹"+t;
+  window.open("https://wa.me/918252055721?text="+msg);
+}
+
 </script>
 
 </body>
