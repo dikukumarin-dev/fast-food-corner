@@ -1,46 +1,74 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Food Delivery</title>
+<title>Zomato Style Food</title>
+
 <style>
 body{
   font-family: Arial;
-  background:#f5f5f5;
-  text-align:center;
+  background:#f2f2f2;
+  margin:0;
 }
+
 .header{
   background:#e23744;
   color:white;
   padding:15px;
+  text-align:center;
   font-size:22px;
   font-weight:bold;
 }
+
+.search{
+  padding:12px;
+  width:90%;
+  margin:10px auto;
+  display:block;
+  border-radius:8px;
+  border:none;
+}
+
 .card{
   background:white;
-  width:330px;
-  margin:15px auto;
-  padding:15px;
+  width:92%;
+  margin:12px auto;
   border-radius:12px;
-  box-shadow:0 0 8px gray;
+  overflow:hidden;
+  box-shadow:0 2px 6px gray;
 }
+
+.card img{
+  width:100%;
+  height:160px;
+  object-fit:cover;
+}
+
+.info{
+  padding:12px;
+}
+
+.title{
+  font-size:18px;
+  font-weight:bold;
+}
+
+.rating{
+  color:green;
+  font-weight:bold;
+}
+
+.price{
+  color:gray;
+}
+
 button{
   background:#e23744;
   color:white;
   border:none;
-  padding:8px 14px;
+  padding:10px;
   border-radius:6px;
-  margin:5px;
-}
-.qty{
-  font-size:18px;
-  margin:0 10px;
-}
-input, textarea{
-  width:90%;
-  padding:8px;
-  margin:5px;
-  border-radius:6px;
-  border:1px solid #ccc;
+  width:100%;
+  margin-top:8px;
 }
 </style>
 </head>
@@ -49,79 +77,43 @@ input, textarea{
 
 <div class="header">🍔 Food Delivery</div>
 
+<input class="search" placeholder="Search food...">
+
 <div class="card">
-<h3>Customer Details</h3>
-<input id="name" placeholder="Your Name">
-<textarea id="address" placeholder="Delivery Address"></textarea>
+<img src="https://images.unsplash.com/photo-1594007654729-407eedc4fe0f">
+<div class="info">
+<div class="title">Pizza Palace</div>
+<div class="rating">⭐ 4.5 • 30 min</div>
+<div class="price">₹249</div>
+<button onclick="pay(249)">Order Now</button>
+</div>
 </div>
 
-<div id="items"></div>
+<div class="card">
+<img src="https://images.unsplash.com/photo-1550547660-d9450f859349">
+<div class="info">
+<div class="title">Burger Hub</div>
+<div class="rating">⭐ 4.3 • 25 min</div>
+<div class="price">₹129</div>
+<button onclick="pay(129)">Order Now</button>
+</div>
+</div>
 
 <div class="card">
-<h3>Total: ₹<span id="total">0</span></h3>
-<button onclick="pay()">Pay Now</button>
-<button onclick="whatsapp()">Order on WhatsApp</button>
+<img src="https://images.unsplash.com/photo-1604908176997-43148e7e4c7a">
+<div class="info">
+<div class="title">Biryani House</div>
+<div class="rating">⭐ 4.7 • 35 min</div>
+<div class="price">₹179</div>
+<button onclick="pay(179)">Order Now</button>
+</div>
 </div>
 
 <script>
-
-let foods = [
-  {name:"Pizza", price:249},
-  {name:"Burger", price:129},
-  {name:"Biryani", price:179},
-  {name:"Cold Drink", price:49},
-  {name:"Ice Cream", price:69}
-];
-
-let cart = {};
-
-let html="";
-
-foods.forEach((f,i)=>{
-  cart[i]=0;
-  html += `
-  <div class="card">
-  <h3>${f.name} — ₹${f.price}</h3>
-  <button onclick="change(${i},-1)">−</button>
-  <span class="qty" id="q${i}">0</span>
-  <button onclick="change(${i},1)">+</button>
-  </div>`;
-});
-
-document.getElementById("items").innerHTML = html;
-
-function change(i,val){
-  cart[i]+=val;
-  if(cart[i]<0) cart[i]=0;
-  document.getElementById("q"+i).innerText = cart[i];
-  updateTotal();
+function pay(amount){
+  window.location.href =
+  "upi://pay?pa=diku.r@ptyes&pn=FoodOrder&am="+amount;
 }
-
-function updateTotal(){
-  let t=0;
-  foods.forEach((f,i)=>{
-    t += f.price * cart[i];
-  });
-  document.getElementById("total").innerText = t;
-}
-
-function pay(){
-  let t = document.getElementById("total").innerText;
-  let name = document.getElementById("name").value;
-
-  let link = "upi://pay?pa=diku.r@ptyes&pn="+name+"&am="+t;
-  window.location.href = link;
-}
-
-function whatsapp(){
-  let t = document.getElementById("total").innerText;
-  let name = document.getElementById("name").value;
-  let addr = document.getElementById("address").value;
-
-  let msg = "Order from "+name+"%0AAddress: "+addr+"%0ATotal: ₹"+t;
-  window.open("https://wa.me/918252055721?text="+msg);
-}
-
 </script>
 
 </body>
